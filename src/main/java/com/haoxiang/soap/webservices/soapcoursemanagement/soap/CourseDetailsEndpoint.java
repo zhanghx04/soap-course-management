@@ -46,7 +46,7 @@ public class CourseDetailsEndpoint {
 
         for (Course course : courses) {
             CourseDetails courseDetails = mapCourse(course);
-            response.getCourseDetailsList().add(courseDetails);
+            response.getCourseDetails().add(courseDetails);
         }
 
         return response;
@@ -68,6 +68,17 @@ public class CourseDetailsEndpoint {
         List<Course> courses = service.findAll();
 
         return mapAllCourseDetails(courses);
+    }
+
+    @PayloadRoot(namespace = "http://haoxiang.com/courses", localPart = "DeleteCourseDetailsRequest")
+    @ResponsePayload
+    public DeleteCourseDetailsResponse deleteCourseDetailsRequest(@RequestPayload DeleteCourseDetailsRequest request) {
+        int status = service.deleteById(request.getId());
+
+        DeleteCourseDetailsResponse response = new DeleteCourseDetailsResponse();
+        response.setStatus(status);
+
+        return response;
     }
 
 }
