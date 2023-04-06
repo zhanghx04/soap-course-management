@@ -1,6 +1,7 @@
 package com.haoxiang.soap.webservices.soapcoursemanagement.soap;
 
 import com.haoxiang.courses.*;
+import com.haoxiang.courses.Status;
 import com.haoxiang.soap.webservices.soapcoursemanagement.soap.bean.Course;
 import com.haoxiang.soap.webservices.soapcoursemanagement.soap.service.CourseDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,12 +74,21 @@ public class CourseDetailsEndpoint {
     @PayloadRoot(namespace = "http://haoxiang.com/courses", localPart = "DeleteCourseDetailsRequest")
     @ResponsePayload
     public DeleteCourseDetailsResponse deleteCourseDetailsRequest(@RequestPayload DeleteCourseDetailsRequest request) {
-        int status = service.deleteById(request.getId());
+        CourseDetailsService.Status status = service.deleteById(request.getId());
 
         DeleteCourseDetailsResponse response = new DeleteCourseDetailsResponse();
-        response.setStatus(status);
+        response.setStatus(mapStatus(status));
 
         return response;
     }
+
+    private Status mapStatus(CourseDetailsService.Status status) {
+        if (status == CourseDetailsService.Status.FAILURE) {
+            return Status.FAILURE;
+        }
+
+        return Status.SUCCESS;
+    }
+
 
 }
